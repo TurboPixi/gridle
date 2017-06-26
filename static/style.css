@@ -1,0 +1,16 @@
+body {
+  background-color: #fff;
+}
+
+.stage {
+  display: block;
+  border: 2px black solid;
+  margin: 50px auto 0;
+  box-shadow: 2px 3px 1px rgba(0, 0, 0, 0.3);
+}
+
+#footer {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 20px auto;
+}

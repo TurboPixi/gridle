@@ -1,0 +1,44 @@
+{
+  "name": "pixi-babel",
+  "version": "0.0.1",
+  "description": "Pixi boilerplate with Webpack and Babel",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node webpack/devServer",
+    "build": "babel-node webpack/compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lapixx/pixi-babel.git"
+  },
+  "author": "Tijn Kersjes <tijn@divbyzero.nl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lapixx/pixi-babel/issues"
+  },
+  "homepage": "https://github.com/Lapixx/pixi-babel#readme",
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-eslint": "*",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-lodash": "*",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "clean-webpack-plugin": "^0.1.10",
+    "copy-webpack-plugin": "^3.0.1",
+    "eslint": "^3.6.1",
+    "eslint-config-airbnb": "*",
+    "eslint-loader": "^1.5.0",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jsx-a11y": "*",
+    "eslint-plugin-react": "*",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.1"
+  },
+  "dependencies": {
+    "pixi.js": "^4.5.3",
+    "lodash": "*"
+  }
+}
