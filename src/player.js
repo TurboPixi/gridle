@@ -15,7 +15,7 @@ export default class Player extends PIXI.Container {
     keybind(38, this.moveUp);
     keybind(39, this.moveRight);
     keybind(40, this.moveDown);
-    keybind(81, () => { debugger; });
+    // keybind(27, () => { debugger; }); // 'esc' to start js debugger
   }
 
   buildGraphic() {
@@ -29,7 +29,6 @@ export default class Player extends PIXI.Container {
   move(xCount, yCount) {
     this.x = this.x + (xCount * this.gridSize);
     this.y = this.y + (yCount * this.gridSize);
-    console.log([this.x, this.y]);
   }
 
   moveLeft = () => this.move(-1, 0);

@@ -16,10 +16,10 @@ const gameWorldSize = gameWorldSizeInCells.map((cells) => gridSize * cells);
 const clouds = [];
 let tick = 0;
 
-const showSpriteSheets = (renderer) => {
-  const birdSpriteSheet = new Bird(renderer, gridSize).getSprite('fullBirdSpriteSheet');
-  stage.addChild(birdSpriteSheet);
-};
+// const showSpriteSheets = (renderer) => {
+//  const birdSpriteSheet = new Bird(renderer, gridSize).getSprite('fullBirdSpriteSheet');
+//  stage.addChild(birdSpriteSheet);
+// };
 
 const redraw = (time, renderer) => {
   tick += 1;

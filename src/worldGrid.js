@@ -95,9 +95,8 @@ export default class WorldGrid extends PIXI.Container {
     });
   }
 
-  animate = (tick) => {
+  animate = () => {
     this.scroll();
-    if (tick % 240 === 0) { console.log(`dist remaining: ${this.scrollDistanceRemaining}`) };
   }
 
   scroll = () => {
