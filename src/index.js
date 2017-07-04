@@ -1,15 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { forEach } from 'lodash';
 
-import gridContainer from './gridContainer';
-import player from './player';
+import WorldGrid from './worldGrid';
 import Cloud from './cloud';
 import Bird from './bird';
 
 // FIXME: no globals
-const gridSize = 10;
+const gridSize = 12;
 let stage;
-let yourGuy;
+let worldGrid;
 const birds = [];
 let birdsContainer;
 const gameWorldSizeInCells = [100, 100];
@@ -17,10 +16,16 @@ const gameWorldSize = gameWorldSizeInCells.map((cells) => gridSize * cells);
 const clouds = [];
 let tick = 0;
 
+const showSpriteSheets = (renderer) => {
+  const birdSpriteSheet = new Bird(renderer, gridSize).getSprite('fullBirdSpriteSheet');
+  stage.addChild(birdSpriteSheet);
+};
+
 const redraw = (time, renderer) => {
   tick += 1;
   requestAnimationFrame((t) => redraw(t, renderer));
 
+  worldGrid.animate(tick);
   forEach(clouds, (cloud) => cloud.drift());
   forEach(birds, (bird) => bird.animate(tick));
   birdsContainer.children.sort((a, b) => a.birdRef.altitude - b.birdRef.altitude);
@@ -37,18 +42,16 @@ const setup = () => {
 
   renderer.view.className = 'stage';
   document.getElementById('renderer').appendChild(renderer.view);
-  renderer.backgroundColor = 0xeeeeee;
+  renderer.backgroundColor = 0xd7d7d7;
 
   stage = new PIXI.Container();
 
-  stage.addChild(gridContainer(renderer, gridSize));
+  worldGrid = new WorldGrid(renderer, gridSize);
+  stage.addChild(worldGrid);
 
-  yourGuy = player(renderer, gridSize);
-  yourGuy.x = 50 * gridSize;
-  yourGuy.y = 49 * gridSize;
-  stage.addChild(yourGuy);
+  // Stage dressing
 
-  // birdsContainer = new PIXI.particles.ParticleContainer(1024, { rotation: true, scale: true });
+  // birdsContainer = new PIXI.particles.ParticleContainer(15000, { rotation: true, scale: true });
   birdsContainer = new PIXI.Container();
   const numBirds = Math.trunc(Math.random() * 3) + 1;
   for (let i = 0; i < numBirds; i += 1) {
@@ -69,9 +72,12 @@ const setup = () => {
     stage.addChild(newCloud.container);
   }
 
+  // showSpriteSheets(renderer);
+
   // initial render
   redraw(-1, renderer);
 };
+
 
 window.addEventListener('load', () => {
   // External asset file loading would work like this:

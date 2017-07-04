@@ -11,7 +11,7 @@ class Tuft {
     this.graphics = new PIXI.Graphics();
 
     // this.graphics.lineStyle(1, 0xffffff, 0.5);
-    this.graphics.beginFill(0xffffff, 0.3);
+    this.graphics.beginFill(0xffffff, 0.2);
     this.graphics.drawEllipse(0, 0,
                               cloud.gridSize * this.widthInCells / 2,
                               cloud.gridSize * this.heightInCells / 2);

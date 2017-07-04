@@ -2,13 +2,19 @@ import * as PIXI from 'pixi.js';
 import { forEach } from 'lodash';
 
 function spriteFrame(opts) {
+  const width = Math.trunc(opts.w);
+  const height = Math.trunc(opts.h);
   return ({
-    frame: { x: opts.x, y: opts.y, w: opts.w, h: opts.h },
+    frame: { x: Math.trunc(opts.x), y: Math.trunc(opts.y), w: width, h: height },
     rotated: false,
     trimmed: false,
-    spriteSourceSize: { x: 0, y: 0, w: opts.w, h: opts.h },
-    sourceSize: { w: opts.w, h: opts.h },
+    spriteSourceSize: { x: 0, y: 0, w: width, h: height },
+    sourceSize: { w: width, h: height },
   });
+}
+
+function chordLength(radius, angle) {
+  return 2 * radius * Math.sin(angle / 2);
 }
 
 export default class Bird {
@@ -16,7 +22,7 @@ export default class Bird {
   constructor(renderer, gridSize) {
     this.gridSize = gridSize;
     this.renderer = renderer;
-    this.scale = gridSize * 6;
+    this.scale = gridSize * 8;
     this.center = { x: this.scale * 3.5, y: this.scale };
     this.setupSpeedAndAltitude();
     this.bearing = Math.random() * 2 * Math.PI;
@@ -24,7 +30,7 @@ export default class Bird {
     this.atlas = { frames: {}, meta: {} };
     this.buildSpriteSheet();
     // this.container = new PIXI.Container(); // for debugging, prefer ParticleContainer
-    this.container = new PIXI.particles.ParticleContainer(100, { rotation: true, scale: true });
+    this.container = new PIXI.particles.ParticleContainer(15000, { rotation: true, scale: true });
     this.container.birdRef = this;
     this.container.pivot.set(this.center.x, this.center.y);
     this.drawBird();
@@ -34,13 +40,13 @@ export default class Bird {
 
   setupSpeedAndAltitude() {
     this.minSpeed = 0.2;
-    this.minAltitude = 1.5;
+    this.maxAltitude = this.gridSize / 3 + 2;
+    this.minAltitude = this.maxAltitude - 3;
     this.speedForAltitude = 0.7;
-    this.maxAltitude = 4;
     this.maxSpeed = this.minSpeed + (this.maxAltitude - this.minAltitude) * this.speedForAltitude;
     this.altitude = this.minAltitude + Math.random(this.maxAltitude - this.minAltitude);
     this.speed = this.minSpeed + (this.maxAltitude - this.altitude) * this.speedForAltitude;
-    console.log(`maxSpeed: ${this.maxSpeed}, speed: ${this.speed}`);
+    // console.log(`maxSpeed: ${this.maxSpeed}, speed: ${this.speed}`);
   }
 
   setRotationAndVector() {
@@ -98,20 +104,25 @@ export default class Bird {
     gr.endFill();
 
     // tail
+    const edge = gr.width + 2;
+    const tailAngle = 1.0; // radians
+    const tailLength = scale;
+    const tailWidth = chordLength(tailLength, tailAngle);
+    this.atlas.frames.birdTail = spriteFrame({
+      x: edge,
+      y: 0,
+      w: tailWidth,
+      h: tailLength });
     gr.beginFill(0xaaaaaa);
     // gr.lineStyle(1, 0xaaaaaa, 1);
-    const edge = gr.width;
-    // NOTE: trying to put the arc center at y: 0 will break pixi at runtime
-    gr.arc(edge + 2 + scale * 0.5, 2, scale, (Math.PI / 2) - 0.45, (Math.PI / 2) + 0.45);
-    gr.lineTo(edge + 2 + scale * 0.5, 2);
+    gr.arc(edge + tailWidth / 2,
+           0, // Math.cos(tailAngle / 2) * tailLength,
+           tailLength,
+           (Math.PI - tailAngle) / 2,
+           (Math.PI + tailAngle) / 2);
+    gr.lineTo(edge + tailWidth / 2, 2);
     gr.closePath();
     gr.endFill();
-    // FIXME: kinda eyeballing the atlas entry for this one, use math instead
-    this.atlas.frames.birdTail = spriteFrame({
-      x: edge + 4,
-      y: 0,
-      w: gr.width - edge - 4,
-      h: scale + 4 });
 
     // background box
     this.atlas.frames.birdBackBox = spriteFrame({ x: 0, y: gr.height + 2, w: this.center.x * 2, h: this.center.y * 2 });
@@ -167,7 +178,7 @@ export default class Bird {
     body.y = this.center.y - body.height / 2;
     const tail = this.getSprite('birdTail');
     tail.x = this.center.x - tail.width / 2;
-    tail.y = this.center.y - body.height * 0.1;
+    tail.y = this.center.y;
     this.container.addChild(tail);
     this.container.addChild(body);
   }
