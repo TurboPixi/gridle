@@ -43,6 +43,7 @@ export default class WorldGrid extends PIXI.Container {
       [this.scrollBoxCenter.x + this.halfScrollBox.x,
         this.scrollBoxCenter.y + this.halfScrollBox.y],
     ];
+    // this.drawScrollBox();
   }
 
   drawScrollBox = () => {
@@ -74,8 +75,8 @@ export default class WorldGrid extends PIXI.Container {
 
     this.gridSprite = new PIXI.Sprite(renderer.generateTexture(grid));
     this.gridContainer.addChild(this.gridSprite);
-    this.gridContainer.x = -renderer.view.height;
-    this.gridContainer.y = -renderer.view.width;
+    this.gridContainer.x = -renderer.view.width;
+    this.gridContainer.y = -renderer.view.height;
     this.addChild(this.gridContainer);
   }
 
