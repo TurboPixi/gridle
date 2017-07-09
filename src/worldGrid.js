@@ -83,6 +83,7 @@ export default class WorldGrid extends PIXI.Container {
   gridLineColor = (count) => (count % 5 === 0 ? 0x666666 : 0x999999);
 
   greebles = (num) => {
+    // temporary, inefficient ( prefer spritesheet + particalContainer )
     const greebleChars = ['*', '+', '~', '\u2022', '\u25aa'];
     const greebStyle = { fontFamily: 'monospace', fontSize: this.gridSize - 4, fill: '#000' };
     const greebleStrs = Array(num).fill().map(() => sample(greebleChars));
@@ -98,6 +99,7 @@ export default class WorldGrid extends PIXI.Container {
 
   animate = () => {
     this.scroll();
+    this.yourGuy.animate();
   }
 
   scroll = () => {
@@ -141,16 +143,17 @@ export default class WorldGrid extends PIXI.Container {
   beginScroll = ([xDir, yDir]) => {
     if (xDir === 0 && yDir === 0) { return; }
     if (this.scrollDistanceRemaining) {
-      // corner cases
+      // corner cases; works without adding anything here, but diagonal scroll would look cool
     } else {
       this.setScrollBox([xDir, yDir]);
       this.scrollDistanceRemaining = [xDir * this.halfScrollBox.x, yDir * this.halfScrollBox.y];
       this.scrollRate = this.scrollDistanceRemaining.map((px) => Math.trunc(px / this.scrollFrames));
+      this.gridContainer.x += Math.round(this.scrollDistanceRemaining[0] / this.gridSize) * this.gridSize;
+      this.gridContainer.y += Math.round(this.scrollDistanceRemaining[1] / this.gridSize) * this.gridSize;
     }
   }
 
   endScroll = () => {
-    console.log('ending scroll');
     delete this.scrollDistanceRemaining;
     delete this.scrollRate;
   }

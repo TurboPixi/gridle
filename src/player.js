@@ -6,10 +6,13 @@ export default class Player extends PIXI.Container {
 
   constructor(renderer, gridSize) {
     super();
+    this.spriteScale = 6;
     this.gridSize = gridSize;
-    this.buildGraphic();
+    this.buildGraphic(this.spriteScale);
     this.texture = renderer.generateTexture(this.graphic);
     this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite.scale.x = 1 / this.spriteScale;
+    this.sprite.scale.y = 1 / this.spriteScale;
     this.addChild(this.sprite);
     keybind(37, this.moveLeft);
     keybind(38, this.moveUp);
@@ -18,12 +21,21 @@ export default class Player extends PIXI.Container {
     // keybind(27, () => { debugger; }); // 'esc' to start js debugger
   }
 
-  buildGraphic() {
+  buildGraphic(scale) {
     this.graphic = new PIXI.Graphics();
-    this.graphic.lineStyle(1, 0x999999, 1);
+    this.graphic.lineStyle(scale * 0.75, 0x999999, 1);
     this.graphic.beginFill(0xe7e7e7);
-    this.graphic.drawEllipse(0, 0, this.gridSize / 2 - 1, this.gridSize / 2 - 1);
+    this.graphic.drawEllipse(scale * this.gridSize / 2,
+                             scale * this.gridSize / 2,
+                             scale * (this.gridSize - 1) / 2,
+                             scale * (this.gridSize - 1) / 2);
     this.graphic.endFill();
+    this.graphic.lineStyle(scale * 1.0, 0xa0a0a0, 0.8);
+    this.graphic.drawRect(scale * this.gridSize * 0.4,
+                          scale * this.gridSize * 0.3,
+                          scale * this.gridSize * 0.3,
+                          scale * this.gridSize * 0.3);
+
   }
 
   move(xCount, yCount) {
@@ -37,5 +49,6 @@ export default class Player extends PIXI.Container {
   moveDown = () => this.move(0, 1);
 
   animate() {
+
   }
 }

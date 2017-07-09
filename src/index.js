@@ -11,7 +11,7 @@ let stage;
 let worldGrid;
 const birds = [];
 let birdsContainer;
-const gameWorldSizeInCells = [112, 84];
+const gameWorldSizeInCells = [100, 80];
 const gameWorldSize = gameWorldSizeInCells.map((cells) => gridSize * cells);
 const clouds = [];
 let tick = 0;
